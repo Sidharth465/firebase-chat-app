@@ -1,29 +1,37 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-import 'react-native-reanimated';
+import { AuthContextProvider, useAuth } from "@/context/authContext";
+import { router, Slot, useSegments } from "expo-router";
+import React, { useEffect } from "react";
+import { SafeAreaView } from "react-native-safe-area-context";
 
-import { useColorScheme } from '@/hooks/useColorScheme';
+const MainLayout = () => {
+  const { isAuthenticated } = useAuth();
+  const segments = useSegments();
 
-export default function RootLayout() {
-  const colorScheme = useColorScheme();
-  const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
-  });
+  useEffect(() => {
+    if (typeof isAuthenticated == "undefined") return;
 
-  if (!loaded) {
-    // Async font loading only occurs in development.
-    return null;
-  }
+    const inApp = segments[0] == "(app)";
+    if (isAuthenticated && !inApp) {
+      // redirenct user to home
+      router.push("/(app)/home");
+    } else if (isAuthenticated == false) {
+      // redirect user to login page
+      router.replace("/signIn");
+    }
+    {
+    }
+  }, [isAuthenticated]);
+  return <Slot />;
+};
 
+const RootLayout = () => {
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
+    <AuthContextProvider>
+      <SafeAreaView className="flex-1">
+        <MainLayout />
+      </SafeAreaView>
+    </AuthContextProvider>
   );
-}
+};
+
+export default RootLayout;
