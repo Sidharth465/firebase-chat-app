@@ -13,15 +13,14 @@ const MainLayout = () => {
     const inApp = segments[0] == "(app)";
     if (isAuthenticated && !inApp) {
       // redirenct user to home
-      router.push("/(app)/home");
+      router.replace("/(app)/home");
     } else if (isAuthenticated == false) {
       // redirect user to login page
       router.replace("/signIn");
     }
-    {
-    }
   }, [isAuthenticated]);
-  return <Slot />;
+
+  return <Slot screenOptions={{ headerShown: false }} />;
 };
 
 const RootLayout = () => {

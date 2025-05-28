@@ -1,3 +1,4 @@
+import LocalStorage from "@/hooks/localStorage";
 import React, { JSX, useEffect, useState } from "react";
 
 type User = {
@@ -8,7 +9,7 @@ type User = {
 
 type AuthContextType = {
   user: User | null;
-  isAuthenticated: boolean | undefined;
+  isAuthenticated: boolean;
   login: (params: { email: string; password: string }) => Promise<void>;
   logout: () => Promise<void>;
   register: (params: { email: string; password: string }) => Promise<void>;
@@ -21,16 +22,23 @@ export const AuthContext = React.createContext<AuthContextType | undefined>(
 export const AuthContextProvider: React.FC<{ children: JSX.Element }> = ({
   children,
 }) => {
-  const [user, setUser] = useState(null);
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean | undefined>(
-    undefined
-  );
+  const [user, setUser] = useState<User | null>(null);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 
   useEffect(() => {
-    setTimeout(() => {
-      setIsAuthenticated(true);
-    }, 3000);
-  }, [isAuthenticated]);
+    const checkAuth = async () => {
+      const token = await LocalStorage.getItem("token");
+      console.log("token at auth context provider", token);
+      if (token) {
+        setIsAuthenticated(true);
+        setUser({ id: "1", email: "john.doe@example.com", name: "John Doe" });
+      } else {
+        setIsAuthenticated(false);
+      }
+    };
+
+    checkAuth();
+  }, []);
   const login = async ({
     email,
     password,
@@ -39,10 +47,16 @@ export const AuthContextProvider: React.FC<{ children: JSX.Element }> = ({
     password: string;
   }) => {
     try {
+      setUser({ id: "1", email, name: "John Doe" });
+      await LocalStorage.setItem("token", "123456");
+      setIsAuthenticated(true);
     } catch (error) {}
   };
   const logout = async () => {
     try {
+      setIsAuthenticated(false);
+      setUser(null);
+      await LocalStorage.removeItem("token");
     } catch (error) {}
   };
   const register = async ({
