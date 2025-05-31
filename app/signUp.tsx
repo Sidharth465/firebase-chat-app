@@ -1,12 +1,6 @@
 import { router } from "expo-router";
 import React from "react";
-import {
-  Pressable,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Text, TextInput, TouchableOpacity, View } from "react-native";
 
 const SignUp = () => {
   return (
@@ -35,11 +29,11 @@ const SignUp = () => {
           Register
         </Text>
       </TouchableOpacity>
-      <Pressable onPress={() => router.back()}>
+      <TouchableOpacity onPress={() => router.back()}>
         <Text className="mt-8 text-blue-500 font-medium underline">
           Already have an account? Login here.
         </Text>
-      </Pressable>
+      </TouchableOpacity>
     </View>
   );
 };

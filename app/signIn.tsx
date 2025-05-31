@@ -2,7 +2,7 @@ import { useAuth } from "@/context/authContext";
 import { router } from "expo-router";
 import React from "react";
 import {
-  Pressable,
+  ActivityIndicator,
   Text,
   TextInput,
   TouchableOpacity,
@@ -10,15 +10,15 @@ import {
 } from "react-native";
 
 const SignIn = () => {
-  const { login } = useAuth();
+  const { login, isCheckingAuth } = useAuth();
 
   const email = React.useRef<string | null>(null);
   const password = React.useRef<string | null>(null);
   const handleSignIn = async () => {
     console.log(email);
     console.log(password);
-    if (!email.current || !password.current)
-      return alert("Please fill all fields");
+    // if (!email.current || !password.current)
+    //   return alert("Please fill all fields");
     await login({
       email: email.current || "",
       password: password.current || "",
@@ -47,15 +47,19 @@ const SignIn = () => {
         onPress={handleSignIn}
         className="w-full bg-purple-500  py-3 rounded-lg"
       >
-        <Text className="text-white text-center font-semibold text-base">
-          Sign In
-        </Text>
+        {isCheckingAuth ? (
+          <ActivityIndicator size={"large"} color={"blue"} />
+        ) : (
+          <Text className="text-white text-center font-semibold text-base">
+            Sign In
+          </Text>
+        )}
       </TouchableOpacity>
-      <Pressable onPress={() => router.push("/signUp")}>
+      <TouchableOpacity onPress={() => router.push("/signUp")}>
         <Text className="mt-8 text-blue-500 font-medium underline">
           Don't have an account? Sign Up
         </Text>
-      </Pressable>
+      </TouchableOpacity>
     </View>
   );
 };

@@ -1,26 +1,19 @@
-import { AuthContextProvider, useAuth } from "@/context/authContext";
-import { router, Slot, useSegments } from "expo-router";
-import React, { useEffect } from "react";
+import { AuthContextProvider } from "@/context/authContext";
+import { Stack } from "expo-router";
+import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const MainLayout = () => {
-  const { isAuthenticated } = useAuth();
-  const segments = useSegments();
-
-  useEffect(() => {
-    if (typeof isAuthenticated == "undefined") return;
-
-    const inApp = segments[0] == "(app)";
-    if (isAuthenticated && !inApp) {
-      // redirenct user to home
-      router.replace("/(app)/home");
-    } else if (isAuthenticated == false) {
-      // redirect user to login page
-      router.replace("/signIn");
-    }
-  }, [isAuthenticated]);
-
-  return <Slot screenOptions={{ headerShown: false }} />;
+  return (
+    <Stack
+      screenOptions={{ headerShown: false, animation: "slide_from_right" }}
+    >
+      <Stack.Screen name="index" />
+      <Stack.Screen name="signIn" />
+      <Stack.Screen name="signUp" />
+      <Stack.Screen name="(tab)" />
+    </Stack>
+  );
 };
 
 const RootLayout = () => {
