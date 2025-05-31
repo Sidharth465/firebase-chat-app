@@ -1,15 +1,13 @@
 import SearchHeader from "@/components/SearchHeader";
 import VideoCard, { VideoCardRef } from "@/components/VideoCard";
 import { MediaSources } from "@/constants/constant";
-import { useIsFocused } from "@react-navigation/native";
-import React, { useRef, useState } from "react";
+import { useFocusEffect } from "expo-router";
+import React, { useCallback, useRef, useState } from "react";
 import { Dimensions, FlatList, Text, View } from "react-native";
 
 const { height } = Dimensions.get("window");
 
 const Home = () => {
-  const isFocused = useIsFocused();
-
   const [visibleItems, setVisibleItems] = useState<number[]>([]);
   const videoRefs = useRef<VideoCardRef[]>([]);
   const currentlyPlayingIndex = useRef<number | null>(null);
@@ -40,6 +38,18 @@ const Home = () => {
     }
   };
 
+  useFocusEffect(
+    useCallback(() => {
+      // When screen is focused: do nothing
+
+      return () => {
+        // When screen is unfocused: pause all videos
+        videoRefs.current.forEach((ref) => ref?.pause?.());
+        currentlyPlayingIndex.current = null;
+      };
+    }, [])
+  );
+
   return (
     <View className="flex-1 bg-white">
       <SearchHeader />
@@ -55,7 +65,7 @@ const Home = () => {
           renderItem={({ item, index }) => (
             <VideoCard
               ref={(ref) => (videoRefs.current[index] = ref!)}
-              isVisible={visibleItems.includes(item.id) && isFocused}
+              isVisible={visibleItems.includes(item.id)}
               videoSource={item.sources[0]}
               thumb={item.thumb}
               onPress={() => handleVideoPress(index)}
