@@ -6,7 +6,7 @@ const TabLayout = () => {
   return (
     <Tabs
       tabBar={(props) => <TabBar {...props} />}
-      screenOptions={{ headerShown: false }}
+      screenOptions={{ headerShown: false, tabBarHideOnKeyboard: true }}
       initialRouteName="home"
     >
       <Tabs.Screen name="home" />

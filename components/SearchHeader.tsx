@@ -26,7 +26,7 @@ const SearchHeader = () => {
 const styles = StyleSheet.create({
   container: {
     padding: 10,
-    backgroundColor: "#f8f8f8",
+    backgroundColor: "#fff",
   },
   input: {
     height: 40,
@@ -34,6 +34,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 5,
     paddingHorizontal: 10,
+    boxShadow: "rgba(0, 0, 0, 0.2) 0px 1px 10px 2px",
   },
 });
 
