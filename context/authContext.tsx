@@ -43,7 +43,7 @@ export const AuthContextProvider: React.FC<{ children: JSX.Element }> = ({
       } finally {
         setTimeout(() => {
           setCheckingAuth(false);
-        }, 3000);
+        }, 5000);
       }
     };
 

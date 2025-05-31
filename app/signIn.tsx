@@ -11,6 +11,7 @@ import {
 
 const SignIn = () => {
   const { login, isCheckingAuth } = useAuth();
+  console.log(isCheckingAuth);
 
   const email = React.useRef<string | null>(null);
   const password = React.useRef<string | null>(null);
@@ -43,18 +44,19 @@ const SignIn = () => {
         className="w-full border border-gray-300 rounded-lg px-4 py-3 mb-6 text-black"
       />
 
-      <TouchableOpacity
-        onPress={handleSignIn}
-        className="w-full bg-purple-500  py-3 rounded-lg"
-      >
-        {isCheckingAuth ? (
-          <ActivityIndicator size={"large"} color={"blue"} />
-        ) : (
+      {isCheckingAuth ? (
+        <ActivityIndicator size={"large"} />
+      ) : (
+        <TouchableOpacity
+          onPress={handleSignIn}
+          className="w-full bg-purple-500  py-3 rounded-lg"
+        >
           <Text className="text-white text-center font-semibold text-base">
             Sign In
           </Text>
-        )}
-      </TouchableOpacity>
+        </TouchableOpacity>
+      )}
+
       <TouchableOpacity onPress={() => router.push("/signUp")}>
         <Text className="mt-8 text-blue-500 font-medium underline">
           Don't have an account? Sign Up
